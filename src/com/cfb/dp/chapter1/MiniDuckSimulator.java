@@ -6,12 +6,16 @@ package com.cfb.dp.chapter1;
  */
 public class MiniDuckSimulator {
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		Duck mallard = new MallardDuck();
+		mallard.performQuack();
+		mallard.performFly();
+		
+		// 测试使用模型鸭
+		Duck model = new ModelDuck();
+		model.performFly();
+		model.setFlyBehavior(new FlyRocketPowered());
+		model.performFly();
 	}
 
 }

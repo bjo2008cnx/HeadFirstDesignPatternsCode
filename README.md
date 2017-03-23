@@ -1,10 +1,9 @@
 # HeadFirstDesignPatternsCode
-实现《Head First Design Patterns》一书中的代码
+实现《Head First Design Patterns》一书中的代码及相关的个人笔记整理。
 
+[原书作者的GitHub代码地址](https://github.com/bethrobson/Head-First-Design-Patterns/blob/master/src/headfirst/designpatterns/strategy/MiniDuckSimulator.java)
 
-https://github.com/bethrobson/Head-First-Design-Patterns/blob/master/src/headfirst/designpatterns/strategy/MiniDuckSimulator.java
-
-## 第一章 设计模式入门--欢迎来到设计模式的世界
+## 第1章 设计模式入门--欢迎来到设计模式的世界
 
 ### (1)一个概念
 
@@ -19,3 +18,21 @@ https://github.com/bethrobson/Head-First-Design-Patterns/blob/master/src/headfir
 ### (3)设计原则2
 
 &emsp;&emsp;**针对接口编程，而不是针对实现编程**。
+
+### (4)设计原则3
+
+&emsp;&emsp;**多用组合，少用继承**。
+
+&emsp;&emsp;使用组合建立系统具有很大的弹性，不仅可以将算法族封装成类，更可以在“**运行时动态的改变行为**”，只要组合的行为对象符合正确的接口标准即可以。
+
+### (5)策略模式的定义
+
+&emsp;&emsp;**策略模式定义了算法族，分别封装起来，让他们之间可以互相替换，此模式让算法的变化独立于使用算法的客户**。
+
+### (6)本章的一点补充
+
+> * (1) 大多数的模式和原则，都着眼于软件变化的主题；
+> * (2）大多数的模式都**允许系统局部改变独立于其他部分**；
+
+
+## 第2章 观察者模式--让你的对象知悉现状
