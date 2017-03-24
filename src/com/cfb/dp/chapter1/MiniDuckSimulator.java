@@ -14,6 +14,7 @@ public class MiniDuckSimulator {
 		// 测试使用模型鸭
 		Duck model = new ModelDuck();
 		model.performFly();
+		// 运行时动态的改变行为
 		model.setFlyBehavior(new FlyRocketPowered());
 		model.performFly();
 	}
