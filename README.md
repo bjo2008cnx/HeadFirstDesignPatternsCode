@@ -81,3 +81,55 @@
 ## 第3章 装饰者模式--装饰对象
 
 &emsp;&emsp;本章可以称为**给爱用继承的人一个全新的设计眼界**。通过使用对象组合的方式，做到运行时装饰类。
+
+### (1)设计原则
+
+**类应该对扩展开放，对修改关闭。**
+
+### (2) 关于装饰者模式的一些概念
+
+> * (1) **装饰者和被装饰者有相同的超类型；**
+> * (2) 你可以用一个或多个装饰者包装同一个对象；
+> * (3) 由于装饰者和被装饰者拥有相同的父类，所以可以遵循里斯替换原则，在任何需要原始对象的场合，都可以使用装饰过的对象替代他。
+> * (4) **装饰者可以在委托被装饰者的行为之前或者之后，加上自己的行为，以达到特定的目的；**
+> * (5) 对象可以在任何时候被装饰，所以可以在运行时动态地，不限量地用你喜欢的装饰者来装饰对象；
+
+### (3) 定义装饰者模式
+
+&emsp;&emsp;**装饰者模式动态的将责任附加到对象上，若要扩展功能，装饰者提供了比继承更有弹性的替代方案。**
+
+### (4) 以一个奶茶店的运营为例子来看
+
+![装饰者模式类图类图](http://occl9k36n.bkt.clouddn.com/2017_03_25_decorate_pattern.png)
+
+最终的测试代码：
+
+``` java
+public class DrinkStore {
+
+	public static void main(String[] args) {
+		Drinks drink = new GreenTea();
+		System.out.println(drink.getDescription() + ":价格$" + drink.cost());
+		
+		Drinks drink2 = new Caffe();
+		drink2 = new BingTang(drink2);
+		drink2 = new NaiXi(drink2);
+		System.out.println(drink2.getDescription() + ":价格$" + drink2.cost());
+		
+		Drinks drink3 = new RedTea();
+		drink3 = new NingMeng(drink3);
+		System.out.println(drink3.getDescription() + ":价格$" + drink3.cost());
+	}
+
+}
+
+```
+
+运行结果：
+
+``` java
+绿茶:价格$1.05
+咖啡+冰糖+奶昔:价格$2.3400000000000003
+红茶+柠檬:价格$0.99
+
+```
