@@ -143,3 +143,87 @@ public class DrinkStore {
 > * 除了继承，装饰者模式也可以让我们扩展行为；
 > * **装饰者模式意味着一群装饰者类**，这些类用来包装具体组件；
 > * 装饰者会导致程序设计中出现许多小对象，如果过度使用，会让程序变得很复杂；
+
+## 第4章 工厂模式--烘烤OO的精华
+
+### (1)简单工厂
+
+原书中的关于简单工厂的使用：
+
+``` java
+public class SimplePizzaFactory {
+
+	public Pizza createPizza(String type) {
+		Pizza pizza = null;
+
+		if (type.equals("cheese")) {
+			pizza = new CheesePizza();
+		} else if (type.equals("pepperoni")) {
+			pizza = new PepperoniPizza();
+		} else if (type.equals("clam")) {
+			pizza = new ClamPizza();
+		} else if (type.equals("veggie")) {
+			pizza = new VeggiePizza();
+		}
+		return pizza;
+	}
+}
+```
+
+&emsp;&emsp;**简单工厂其实不是一个设计模式**，反而比较像是一种编程习惯，但由于经常被使用，有些开发人员的确会把这个编程习惯误认为是“工厂模式”。
+
+### (2)工厂方法
+
+&emsp;&emsp;**现在实例化披萨的操作交给一个具体的方法去执行，此方法就如同是一个工厂。**
+
+改进后的代码：
+``` java
+public abstract class PizzaStore {
+
+	/**
+	 * 现在实例化披萨的操作交给一个具体的方法去执行，
+	 * 此方法就如同是一个工厂
+	 * @param item
+	 * @return
+	 */
+	abstract Pizza createPizza(String item);
+	
+	public Pizza orderPizza(String type) {
+		Pizza pizza = createPizza(type);
+		System.out.println("--- Making a " + pizza.getName() + " ---");
+		pizza.prepare();
+		pizza.bake();
+		pizza.cut();
+		pizza.box();
+		return pizza;
+	}
+}
+```
+
+
+**工厂方法用来处理对象的创建，并将这样的行为封装在子类中。这样，客户端程序中关于超类的代码就和子类的对象创建代码解耦了。**
+
+``` java
+abstract Pizza createPizza(String item);
+```
+
+&emsp;&emsp;工厂方法模式**通过让子类决定该创建的对象是什么，来达到将对象创建的过程封装的目的**。
+
+定义：
+
+&emsp;&emsp;**工厂方法模式定义了一个创建对象的接口，但由子类决定要实例化的类是哪一个。工厂方法让类把实例化推迟到子类**。
+
+通用类图为：
+
+![工厂方法通用类图](http://occl9k36n.bkt.clouddn.com/2017_03_27_FactoryMethodDiagram.png)
+
+
+一些问题的解答：
+
+(1)利用字符串传入参数化的类型，是不是有点危险？万一拼错了怎么办？
+
+&emsp;&emsp;的确，这样的问题会导致所谓的运行时错误。避免此类问题的技巧：可以创建代表参数类型的对象和使用静态常量，或者Java中支持的enum类型。
+
+(2)**对比工厂方法和简单工厂之间的区别(非常的重要)**
+
+&emsp;&emsp;工厂方法中的子类确实看上去非常像简单工厂。**简单工厂把全部的事情在一个地方处理完了。然而工厂方法确实创建一个框架，让子类决定如何去实现。**简单工厂的做法可以将对象的创建封装起来，但是简单工厂不具备工厂方法的弹性，因为简单工厂不能改变正在创建的产品。
