@@ -22,8 +22,8 @@ public class NYPizzaIngredientFactory implements PizzaIngredientFactory {
 
 	@Override
 	public Veggies[] createVeggies() {
-		// TODO Auto-generated method stub
-		return null;
+		Veggies veggies[] = { new Garlic(), new Onion(), new Mushroom(), new RedPepper() };
+		return veggies;
 	}
 
 	@Override
