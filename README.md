@@ -278,3 +278,30 @@ abstract Pizza createPizza(String item);
 ## 第6章 命令模式--封装调用
 
 &emsp;&emsp;命令模式是封装的一个全新的境界：**把方法调用封装起来**。通过封装方法调用，我们可以把运算块包装成形。所以调用此运算的对象不需要关心事情是如何运行的，只要知道如何使用包装成形的方法来完成它就可以。
+
+### (1) 定义**命令模式**
+
+&emsp;&emsp;**命令模式将请求封装成对象，以便使用不同的请求，队列或日志来参数化其他对象。命令模式也可以支持撤销的操作**。
+
+&emsp;&emsp;命令对象通过在**特定接收者上绑定一组动作来封装一个请求**。要达到这一点，命令对象将动作和接收者包进对象。这个对象只暴露出一个execute()方法。
+
+``` java
+		SimpleRemoteControl remote = new SimpleRemoteControl();
+		
+		// 创建任务执行者
+		Light light = new Light();
+		GarageDoor garageDoor = new GarageDoor();
+		
+		// 定义所有类型的任务
+		LightOnCommand lightOn = new LightOnCommand(light);
+		LightOffCommand lightOff = new LightOffCommand(light);
+		GarageDoorOpenCommand garageOpen = new GarageDoorOpenCommand(garageDoor);
+		
+		// setCommand
+		remote.setCommant(lightOn);
+		remote.buttonsWasPressed();
+		
+		// 任务执行
+		remote.setCommant(lightOff);
+		remote.buttonsWasPressed();
+```
