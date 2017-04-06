@@ -305,3 +305,10 @@ abstract Pizza createPizza(String item);
 		remote.setCommant(lightOff);
 		remote.buttonsWasPressed();
 ```
+
+### (2) 关于命令模式的tips
+
+> * (1) 命令模式将发送请求的对象和执行请求的对象解耦；
+> * (2) 在被解耦的两者之间是通过命令对象进行沟通的。**命令对象封装了接收者和一个或一组动作**；
+> * (3) 调用者通过调用命令对象的execute()发出请求，这会使得接收者的动作被调用；
+> * (4) 命令可以支持撤销，通过实现一个undo方法
