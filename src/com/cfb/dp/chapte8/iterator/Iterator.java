@@ -1,4 +1,4 @@
-package com.cfb.dp.chapter8.iterator;
+package com.cfb.dp.chapte8.iterator;
 /**
  * 自定义的迭代器接口
  * @author fengbincao

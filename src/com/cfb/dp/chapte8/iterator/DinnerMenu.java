@@ -1,4 +1,4 @@
-package com.cfb.dp.chapter8.iterator;
+package com.cfb.dp.chapte8.iterator;
 /**
  * 午餐店的菜单实现
  * 底层采用数组存储

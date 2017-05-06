@@ -1,4 +1,4 @@
-package com.cfb.dp.chapter8.iterator;
+package com.cfb.dp.chapte8.iterator;
 
 import java.util.ArrayList;
 

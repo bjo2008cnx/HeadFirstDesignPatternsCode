@@ -13,6 +13,9 @@
 > * 为交互对象之间的松耦合设计而努力；
 > * 对扩展开放，对修改关闭；
 > * 依赖抽象，不要依赖具体类；
+> * 只和朋友交谈；
+> * 别找我，我会找你；
+> * 类只应该有一个改变的理由；
 
 ---
 
@@ -442,3 +445,157 @@ public Iterator<MenuItem> createIterator() {
 类图如下所示：
 
 ![组合模式类图](http://occl9k36n.bkt.clouddn.com/2017_04_26_composite_digram.png)
+
+---
+
+## 第10章 状态模式--事物的状态
+
+&emsp;&emsp;**基本常识，策略模式和状态模式是双胞胎，在出生时才分开。策略模式是围绕可以互换的算法来创建成功业务的。然而，状态走的是更崇高的路，它通过改变对象内部的状态来帮助对象控制自己的行为。**
+
+使用新的设计对旧的代码进行重构：
+
+> * (1) 首先，我们定义一个state接口，**在这个接口内，糖果机的每个动作都有一个对应的方法**；
+> * (2) 然后为机器的每个状态实现状态类，这些类将负责在对应的状态下进行机器的行为；
+> * (3) 最后，我们要摆脱旧的条件代码，取而代之的方式是，将动作委托到状态类；
+
+重构完成之后的类：
+
+``` java
+public class GumballMachine {
+
+	private State soldOutState;
+	private State noQuarterState;
+	private State hasQuarterState;
+	private State soldState;
+	
+	// 当前糖果机的状态
+	private State currentState;
+	private int count = 0;
+	
+	public GumballMachine(int numberGumballs) {
+		soldOutState = new SoldOutState(this);
+		noQuarterState = new NoQuarterState(this);
+		hasQuarterState = new HasQuarterState(this);
+		soldState = new SoldState(this);
+		
+		this.count = numberGumballs;
+		
+		// 初始化当前的状态值
+		if (numberGumballs > 0) {
+			currentState = noQuarterState;
+		} else {
+			currentState = soldOutState;
+		}
+	}
+	
+	public void insertQuarter() {
+		currentState.insertQuarter();
+	}
+	
+	public void ejectQuarter() {
+		currentState.ejectQuarter();
+	}
+	
+	public void turnCrank() {
+		currentState.turnCrank();
+		currentState.dispense();
+	}
+	
+	/**
+	 * 机器售出糖果的操作
+	 */
+	public void releaseBall() {
+		System.out.println("机器成功售出一枚糖果...");
+		if (count != 0) {
+			count = count - 1;
+		}
+	}
+	
+	public void refill(int count) {
+		this.count += count;
+		System.out.println("The gumball machine was just refilled; it's new count is: " + this.count);
+		currentState.refill();
+	}
+	
+	/**
+	 * 切换糖果机至指定的状态
+	 * @param state		指定状态值
+	 */
+	public void setStatue(State state) {
+		this.currentState = state;
+	}
+	
+	public State getState() {
+        return currentState;
+    }
+	
+	int getCount() {
+		return count;
+	}
+
+	public State getSoldOutState() {
+        return soldOutState;
+    }
+
+    public State getNoQuarterState() {
+        return noQuarterState;
+    }
+
+    public State getHasQuarterState() {
+        return hasQuarterState;
+    }
+
+    public State getSoldState() {
+        return soldState;
+    }
+    
+    @Override
+    public String toString() {
+		StringBuffer result = new StringBuffer();
+		result.append("\nMighty Gumball, Inc.");
+		result.append("\nJava-enabled Standing Gumball Model #2004");
+		result.append("\nInventory: " + count + " gumball");
+		if (count != 1) {
+			result.append("s");
+		}
+		result.append("\n");
+		result.append("Machine is " + currentState + "\n");
+		return result.toString();
+	}
+}
+
+```
+
+### (2) 模式定义
+
+&emsp;&emsp;**状态模式允许对象在内部状态改变时改变它的行为，对象看起来好像修改了它的类。**
+
+&emsp;&emsp;**这个模式将状态封装成为独立的类，并将动作委托到代表当前状态的对象，我们知道行为会随着内部状态的改变而改变。**
+
+&emsp;&emsp;**那么定义中的第二部分呢，一个对象“看起来好像修改了它的类”是什么意思呢？从客户的视角来看，如果说你使用的对象能够完全改变它的行为，那么你会觉得，这个对象实际上是从别的类实例化而来的。然而实际上，你知道我们是使用组合通过简单引用不同的状态对象来造成类改变的假象。**
+
+![状态模式类图](http://occl9k36n.bkt.clouddn.com/2017_05_06_StatePattern.png)
+
+### (3) 模式比较
+
+模式 | 描述
+---- | ---
+状态模式 | 封装基于状态的行为，并将行为委托到当前状态
+策略模式 | 将可以互换的行为封装起来，然后使用委托的方法，决定使用哪一种行为
+模板方法 | 由子类决定如何实现算法中的某些步骤
+
+本章要点
+
+> * (1) 状态模式允许一个对象基于内部状态而拥有不同的行为；
+> * (2) 状态模式用类表示状态；
+> * (3) Context会将行为委托给当前状态对象；
+> * (4) **通过将每个状态封装进一个类，我们把以后需要做的任何改变局部化了**；
+> * (5) **策略模式和状态模式类图相同，但是他们的意图不同；**
+> * (6) 策略模式通常会用行为或算法来配置Context类；
+> * (7) 状态模式允许COntext随着状态的改变而改变行为；
+
+---
+
+## 第11章 代理模式--控制对象访问
+
+**代理要做的核心：控制和管理访问。**

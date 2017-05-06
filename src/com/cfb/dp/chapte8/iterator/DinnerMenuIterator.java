@@ -1,4 +1,4 @@
-package com.cfb.dp.chapter8.iterator;
+package com.cfb.dp.chapte8.iterator;
 
 public class DinnerMenuIterator implements Iterator {
 
