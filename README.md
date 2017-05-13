@@ -599,3 +599,100 @@ public class GumballMachine {
 ## 第11章 代理模式--控制对象访问
 
 **代理要做的核心：控制和管理访问。**
+
+### (1) 定义
+
+&emsp;&emsp;**代理模式为另一个对象提供一个替身或占位符以控制这个对象的访问。**
+
+&emsp;&emsp;**使用代理模式创建代表对象，让代表对象控制某对象的访问，被代理的对象可以使远程的对象，创建开销大的对象或需要安全控制的对象。**
+
+几种代理控制访问的方式：
+
+> * (1) 远程代理控制访问远程对象；
+> * (2) 虚拟代理控制访问开销大的资源；
+> * (3) 保护代理基于权限控制对资源的访问；
+
+类图如下
+
+
+![代理模式类图](http://occl9k36n.bkt.clouddn.com/2017_05_13_proxy_uml_diagram.png)
+
+### (2) 虚拟代理
+
+&emsp;&emsp;**虚拟代理作为创建开销大的对象的代表，虚拟代理经常直到我们真正需要一个对象的时候才创建它**。当对象在创建前和创建中时，由虚拟对象来扮演对象的替身。对象创建后，代理就会将请求直接委托给对象。
+
+### (3) 保护代理
+
+&emsp;&emsp;Java在java.lang.reflect包中有自己的代理支持，**利用这个包在运行时动态地创建一个代理类，实现一个或者多个接口，并将这些方法转发到你指定的类。因为实际的代理类是在运行时创建的，所以这个Java技术成为：动态代理。**
+
+动态代理的类图如下：
+
+![动态代理类图](http://occl9k36n.bkt.clouddn.com/2017_05_13_proxy_uml_diagram2.png)
+
+&emsp;&emsp;在这个类图中，**InvocationHandler的作用是响应代理的任何调用，你可以吧InvocationHandler想成代理收到方法调用后，请求做实际工作的对象。**
+
+步骤一：创建InvocationHandler
+
+``` java
+public class OwnerInvocationHandler implements InvocationHandler {
+
+	PersonBean person;
+	
+	public OwnerInvocationHandler(PersonBean person) {
+		this.person = person;
+	}
+	
+	@Override
+	public Object invoke(Object proxy, Method method, Object[] args)
+			throws Throwable {
+		try {
+			if (method.getName().startsWith("get")) {
+				return method.invoke(person, args);
+			} else if(method.getName().equals("setHotOrNotRating")) {
+				// 不允许自己给自己打分
+				throw new IllegalAccessException();
+			} else if(method.getName().startsWith("set")) {
+				// 其他的set方法自己可以自己设置
+				return method.invoke(person, args);
+			}
+		} catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } 
+		return null;
+	}
+
+}
+
+```
+
+步骤二：创建Proxy类并实例化Proxy对象
+
+``` java
+PersonBean getOwnerProxy(PersonBean person) {
+		return (PersonBean) Proxy.newProxyInstance(person.getClass().getClassLoader(),
+				person.getClass().getInterfaces(), 
+				new OwnerInvocationHandler(person));
+	}
+	
+```
+
+给指定的PersonBean对象创建相应的代理对象。
+
+### (4) 小结tips 
+
+> * （1）动态代理之所以被称为动态代理，是因为**运行时才将它的类创建出来，代码开始执行时，还没有proxy类，**他是根据传入的接口集创建的；
+> *  (2) **InvocationHandler并不是真正的proxy,他只是一个帮助proxy的类，proxy会把调用转发给他处理，Proxy本身是利用静态的Proxy.newInstance()方法在运行时动态的创建的；**
+> * （3) 远程代理管理客户和远程对象之间的访问，虚拟代理控制实例化开销比较大的对象，保护代理基于调用者控制对对象方法的访问；
+
+### (5) 其他代理
+
+> * (1) 防火墙代理：
+控制网络资源的访问，保护主题免于“坏客户”的侵害；
+> * (2) 智能引用代理：
+当主题对象被引用时，进行额外的动作，例如计算一个对象被引用的次数；
+> * (3) 缓存代理：
+为开销大的运算结果提供暂时的存储，它也允许多个客户共享结果，以减少网络的延迟；
+> * (4) 同步代理：
+在多线程的情况下为主题对象提供安全的访问；
+> * (5) 复杂隐藏代理：
+用来影藏一个类的复杂集合的复杂度，并进行访问控制，有时也称为“外观代理”；
