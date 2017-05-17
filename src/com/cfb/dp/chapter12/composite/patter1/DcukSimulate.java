@@ -10,7 +10,7 @@ public class DcukSimulate {
 		AbstractDauckFactory duckFactory = new CountingDuckFactory();
 		dcukSimulate.simulate(duckFactory);
 		AbstractDauckFactory duckFactory2 = new NormalDuckFactory();
-		//dcukSimulate.simulate(duckFactory2);
+		dcukSimulate.simulate(duckFactory2);
 	}
 
 	void simulate(AbstractDauckFactory duckFactory) {
